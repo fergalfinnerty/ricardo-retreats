@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ricardo Retreats">
+  <rect width="64" height="64" rx="14" fill="#345a48"/>
+  <path fill="#f6f2e9" d="M16 46V18h12.4c6.6 0 10.8 3.5 10.8 9.1 0 4.2-2.3 7.2-5.9 8.5L40.4 46h-7.2l-6.2-9.6H22.5V46H16zm6.5-15.2h5.6c3.1 0 4.9-1.5 4.9-3.9s-1.8-3.8-4.9-3.8h-5.6v7.7z"/>
+  <path fill="#e8e2d5" d="M42.2 46V28.4h5.8V46h-5.8zm0-20.4V18h5.8v7.6h-5.8z"/>
+</svg>
