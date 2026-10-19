@@ -611,3 +611,6 @@ section { padding: 4rem 0; }
   font-family: var(--font-serif);
   font-weight: 600;
 }
+
+/* Respect the hidden attribute even on elements with display rules */
+[hidden] { display: none !important; }
