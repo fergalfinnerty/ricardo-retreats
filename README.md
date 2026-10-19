@@ -39,7 +39,8 @@ Do **not** scrape Instagram images. Exclude Crete / June20 photos from the Lanza
 
 1. Create a Formspree (or similar) form.
 2. Set `contact.formEndpoint` in `site-config.js` to the POST URL.
-3. Until that is set, submit opens Instagram — no fake success message.
+3. While `formEndpoint` is empty, the form fields stay hidden and the page shows a direct **Message Ricard on Instagram** button only (no submit that discards fields).
+4. When an endpoint is set, the form POSTs and shows success only on a real 2xx response.
 
 ## Deploy
 

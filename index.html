@@ -240,7 +240,7 @@
           </details>
           <details>
             <summary>How do I enquire or book?</summary>
-            <p>Use the form below if a form endpoint is configured, or message Ricard on Instagram @ricardchillonpt. He’ll confirm availability and current payment arrangements.</p>
+            <p>Message Ricard on Instagram @ricardchillonpt. He’ll confirm availability and current payment arrangements. (An online form can be connected later in site-config.js.)</p>
           </details>
         </div>
       </div>
@@ -251,20 +251,31 @@
         <div>
           <p class="section-eyebrow">Register interest</p>
           <h2 class="section-title" id="contact-title">Ask Ricard about joining</h2>
-          <p class="section-intro">
-            Share your name and email, and an optional message. No health details needed here.
-            Until a form destination is configured, the clearest way to reach Ricard is Instagram.
-          </p>
-          <div class="instagram-cta">
-            <p style="margin-top:0">Message Ricard directly:</p>
-            <a class="btn btn-terracotta" id="instagram-link"
-               href="https://www.instagram.com/ricardchillonpt/"
-               rel="noopener noreferrer" target="_blank">
-              Open Instagram @ricardchillonpt
-            </a>
+          <div id="contact-no-endpoint">
+            <p class="section-intro">
+              The online enquiry form isn’t connected yet, so nothing on this page will email Ricard.
+              The way to enquire is to message him on Instagram.
+            </p>
+            <div class="instagram-cta">
+              <a class="btn btn-terracotta" id="instagram-link"
+                 href="https://www.instagram.com/ricardchillonpt/"
+                 rel="noopener noreferrer" target="_blank">
+                Message Ricard on Instagram
+              </a>
+              <p class="form-note" style="margin:1rem 0 0;color:rgba(246,242,233,0.75)">
+                Instagram: @ricardchillonpt — opens in a new tab.
+              </p>
+            </div>
+          </div>
+          <div id="contact-with-endpoint" hidden>
+            <p class="section-intro">
+              Share your name and email, and an optional message. No health details needed here.
+              You can also reach Ricard on Instagram
+              <a id="instagram-link-alt" href="https://www.instagram.com/ricardchillonpt/" rel="noopener noreferrer" target="_blank">@ricardchillonpt</a>.
+            </p>
           </div>
         </div>
-        <form class="form" id="interest-form" novalidate>
+        <form class="form" id="interest-form" novalidate hidden>
           <label>
             Name
             <input type="text" name="name" autocomplete="name" required maxlength="120">
@@ -282,8 +293,7 @@
             <span>Keep me posted about future Ricardo Retreats (optional).</span>
           </label>
           <p class="form-note" id="form-endpoint-note">
-            The enquiry form is ready to connect, but no email destination is configured yet.
-            Please use Instagram to get in touch for now.
+            Your message will be sent via the configured form endpoint.
           </p>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
           <button class="btn btn-primary" type="submit" id="form-submit">Send interest</button>

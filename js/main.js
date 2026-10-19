@@ -77,50 +77,42 @@
     });
   }
 
-  function setupForm() {
+  function setupContact() {
     var form = document.getElementById("interest-form");
     var status = document.getElementById("form-status");
-    var note = document.getElementById("form-endpoint-note");
     var submit = document.getElementById("form-submit");
+    var noEndpoint = document.getElementById("contact-no-endpoint");
+    var withEndpoint = document.getElementById("contact-with-endpoint");
     var ig = document.getElementById("instagram-link");
-    if (!form || !status) return;
+    var igAlt = document.getElementById("instagram-link-alt");
 
-    var endpoint = (site.contact && site.contact.formEndpoint) || "";
+    var endpoint = ((site.contact && site.contact.formEndpoint) || "").trim();
     var igUrl = (site.contact && site.contact.instagramUrl) || "https://www.instagram.com/ricardchillonpt/";
     if (ig) ig.href = igUrl;
+    if (igAlt) igAlt.href = igUrl;
+
+    if (!endpoint) {
+      if (noEndpoint) noEndpoint.hidden = false;
+      if (withEndpoint) withEndpoint.hidden = true;
+      if (form) form.hidden = true;
+      return;
+    }
+
+    if (noEndpoint) noEndpoint.hidden = true;
+    if (withEndpoint) withEndpoint.hidden = false;
+    if (form) form.hidden = false;
+    if (!form || !status || !submit) return;
 
     function showStatus(type, message) {
       status.className = "form-status is-visible " + type;
       status.textContent = message;
     }
 
-    if (!endpoint) {
-      if (note) {
-        note.textContent =
-          "The enquiry form is ready to connect, but no email destination is configured yet. Please use Instagram to get in touch for now.";
-      }
-      if (submit) {
-        submit.textContent = "Open Instagram to enquire";
-      }
-    } else if (note) {
-      note.textContent = "Your message will be sent to Ricard via the configured form endpoint.";
-    }
-
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       status.className = "form-status";
       status.textContent = "";
-
       if (!form.reportValidity()) return;
-
-      if (!endpoint) {
-        showStatus(
-          "info",
-          "No form destination is set up yet, so nothing was submitted from this page. Opening Instagram so you can message Ricard directly."
-        );
-        window.open(igUrl, "_blank", "noopener,noreferrer");
-        return;
-      }
 
       var data = new FormData(form);
       submit.disabled = true;
@@ -149,5 +141,5 @@
   applyBindings();
   buildGallery();
   setupNav();
-  setupForm();
+  setupContact();
 })();
