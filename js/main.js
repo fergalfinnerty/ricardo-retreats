@@ -1,145 +1,216 @@
+/* Ricard Retreats: applies site-config.js to the page, builds the gallery,
+   runs the mobile menu and the (optional) enquiry form. No dependencies. */
 (function () {
   "use strict";
 
   var site = window.SITE || {};
 
-  function getPath(obj, path) {
+  function get(path) {
     return path.split(".").reduce(function (acc, key) {
-      return acc && acc[key] != null ? acc[key] : null;
-    }, obj);
+      return acc != null && acc[key] != null ? acc[key] : null;
+    }, site);
   }
 
+  function each(selector, fn) {
+    Array.prototype.forEach.call(document.querySelectorAll(selector), fn);
+  }
+
+  /* Text, links, attributes */
   function applyBindings() {
-    document.querySelectorAll("[data-bind]").forEach(function (el) {
-      var val = getPath(site, el.getAttribute("data-bind"));
-      if (val != null) el.textContent = val;
+    each("[data-bind]", function (el) {
+      var v = get(el.getAttribute("data-bind"));
+      if (typeof v === "string") el.textContent = v;
     });
-    document.querySelectorAll("[data-bind-href]").forEach(function (el) {
-      var val = getPath(site, el.getAttribute("data-bind-href"));
-      if (val) el.setAttribute("href", val);
+    each("[data-bind-href]", function (el) {
+      var v = get(el.getAttribute("data-bind-href"));
+      if (v) el.setAttribute("href", v);
     });
-    if (site.colours) {
-      var root = document.documentElement;
-      if (site.colours.ivory) root.style.setProperty("--ivory", site.colours.ivory);
-      if (site.colours.seaGreen) root.style.setProperty("--sea", site.colours.seaGreen);
-      if (site.colours.charcoal) root.style.setProperty("--charcoal", site.colours.charcoal);
-      if (site.colours.sand) root.style.setProperty("--sand", site.colours.sand);
-      if (site.colours.terracotta) root.style.setProperty("--terracotta", site.colours.terracotta);
+    each("[data-bind-aria]", function (el) {
+      var v = get(el.getAttribute("data-bind-aria"));
+      if (v) el.setAttribute("aria-label", v);
+    });
+    each("[data-bind-src]", function (el) {
+      var v = get(el.getAttribute("data-bind-src"));
+      if (v) el.setAttribute("src", v);
+    });
+    each("[data-bind-srcset]", function (el) {
+      var v = get(el.getAttribute("data-bind-srcset"));
+      if (v) el.setAttribute("srcset", v);
+    });
+    each("[data-bind-alt]", function (el) {
+      var v = get(el.getAttribute("data-bind-alt"));
+      if (v != null) el.setAttribute("alt", v);
+    });
+
+    var c = site.colours || {};
+    var root = document.documentElement.style;
+    if (c.ivory) root.setProperty("--ivory", c.ivory);
+    if (c.seaGreen) root.setProperty("--sea", c.seaGreen);
+    if (c.charcoal) root.setProperty("--charcoal", c.charcoal);
+    if (c.sand) root.setProperty("--sand", c.sand);
+    if (c.terracotta) root.setProperty("--terracotta", c.terracotta);
+    if (c.terracottaText) root.setProperty("--terracotta-text", c.terracottaText);
+
+    var year = document.getElementById("year");
+    if (year) year.textContent = String(new Date().getFullYear());
+  }
+
+  /* Title and share metadata (static copies are written by tools/sync-meta.py) */
+  function setMeta(attr, key, value) {
+    if (!value) return;
+    var el = document.head.querySelector("meta[" + attr + '="' + key + '"]');
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute(attr, key);
+      document.head.appendChild(el);
     }
+    el.setAttribute("content", value);
+  }
+
+  function applyMeta() {
+    var m = site.meta || {};
+    if (m.title) document.title = m.title;
+    var base = m.siteUrl || "";
+    var img = m.ogImage ? (/^https?:/.test(m.ogImage) ? m.ogImage : base + m.ogImage) : "";
+    setMeta("name", "description", m.description);
+    setMeta("property", "og:type", "website");
+    setMeta("property", "og:site_name", site.brandName);
+    setMeta("property", "og:title", m.ogTitle || m.title);
+    setMeta("property", "og:description", m.ogDescription || m.description);
+    setMeta("property", "og:url", base);
+    setMeta("property", "og:image", img);
+    setMeta("name", "twitter:card", "summary_large_image");
+    setMeta("name", "twitter:title", m.ogTitle || m.title);
+    setMeta("name", "twitter:description", m.ogDescription || m.description);
+    setMeta("name", "twitter:image", img);
+    if (m.noIndex !== false) setMeta("name", "robots", "noindex, nofollow");
+  }
+
+  /* Images */
+  function picture(item, opts) {
+    var pic = document.createElement("picture");
+    if (item.webp) {
+      var s = document.createElement("source");
+      s.type = "image/webp";
+      s.srcset = item.webp;
+      pic.appendChild(s);
+    }
+    var img = document.createElement("img");
+    img.src = item.jpg || item.src;
+    img.alt = item.alt || "";
+    if (item.width) img.width = item.width;
+    if (item.height) img.height = item.height;
+    if (!opts || !opts.eager) img.loading = "lazy";
+    img.decoding = "async";
+    pic.appendChild(img);
+    return pic;
+  }
+
+  function figure(item, className) {
+    var fig = document.createElement("figure");
+    if (className) fig.className = className;
+    fig.appendChild(picture(item));
+    if (item.caption) {
+      var cap = document.createElement("figcaption");
+      cap.textContent = item.caption;
+      fig.appendChild(cap);
+    }
+    return fig;
   }
 
   function buildGallery() {
+    var list = site.images && site.images.gallery;
+    if (!list || !list.length) return;
+    var feature = document.getElementById("villa-feature");
     var gallery = document.getElementById("gallery");
-    if (!gallery || !site.images || !site.images.gallery) return;
-    gallery.innerHTML = "";
-    site.images.gallery.forEach(function (item) {
-      var fig = document.createElement("figure");
-      var frame = document.createElement("div");
-      frame.className = "frame";
-      var picture = document.createElement("picture");
-      if (item.webp) {
-        var source = document.createElement("source");
-        source.type = "image/webp";
-        source.srcset = item.webp;
-        picture.appendChild(source);
-      }
-      var img = document.createElement("img");
-      img.src = item.jpg;
-      img.alt = item.alt || "";
-      img.loading = "eager";
-      img.decoding = "async";
-      picture.appendChild(img);
-      frame.appendChild(picture);
-      fig.appendChild(frame);
-      if (item.caption) {
-        var cap = document.createElement("figcaption");
-        cap.textContent = item.caption;
-        fig.appendChild(cap);
-      }
-      gallery.appendChild(fig);
-    });
+    var rest = list.slice();
+    if (feature && rest[0] && rest[0].layout === "feature") {
+      var f = figure(rest.shift(), "villa-feature");
+      f.id = "villa-feature";
+      feature.parentNode.replaceChild(f, feature);
+    }
+    if (gallery) {
+      gallery.innerHTML = "";
+      rest.forEach(function (item) {
+        gallery.appendChild(figure(item, item.layout === "wide" ? "g-wide" : "g-tall"));
+      });
+    }
   }
 
+  function optionalPhoto(id, item) {
+    var slot = document.getElementById(id);
+    if (!slot || !item || !(item.jpg || item.src)) return; // stays hidden: no empty boxes
+    slot.appendChild(picture(item));
+    if (item.caption) {
+      var cap = document.createElement("figcaption");
+      cap.textContent = item.caption;
+      slot.appendChild(cap);
+    }
+    slot.hidden = false;
+  }
+
+  /* Mobile menu */
   function setupNav() {
     var toggle = document.getElementById("nav-toggle");
     var nav = document.getElementById("site-nav");
     if (!toggle || !nav) return;
+    function close() {
+      toggle.setAttribute("aria-expanded", "false");
+      nav.classList.remove("is-open");
+    }
     toggle.addEventListener("click", function () {
       var open = toggle.getAttribute("aria-expanded") === "true";
       toggle.setAttribute("aria-expanded", String(!open));
       nav.classList.toggle("is-open", !open);
     });
-    nav.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        toggle.setAttribute("aria-expanded", "false");
-        nav.classList.remove("is-open");
-      });
+    each("#site-nav a", function (a) { a.addEventListener("click", close); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("is-open")) { close(); toggle.focus(); }
     });
   }
 
-  function setupContact() {
+  /* Enquiry form: only shown once contact.formEndpoint is set */
+  function setupForm() {
     var form = document.getElementById("interest-form");
     var status = document.getElementById("form-status");
     var submit = document.getElementById("form-submit");
-    var noEndpoint = document.getElementById("contact-no-endpoint");
-    var withEndpoint = document.getElementById("contact-with-endpoint");
-    var ig = document.getElementById("instagram-link");
-    var igAlt = document.getElementById("instagram-link-alt");
-
     var endpoint = ((site.contact && site.contact.formEndpoint) || "").trim();
-    var igUrl = (site.contact && site.contact.instagramUrl) || "https://www.instagram.com/ricardchillonpt/";
-    if (ig) ig.href = igUrl;
-    if (igAlt) igAlt.href = igUrl;
+    if (!form) return;
+    if (!endpoint) { form.hidden = true; return; }
+    form.hidden = false;
 
-    if (!endpoint) {
-      if (noEndpoint) noEndpoint.hidden = false;
-      if (withEndpoint) withEndpoint.hidden = true;
-      if (form) form.hidden = true;
-      return;
+    function show(type, msg) {
+      status.className = "form-status " + type;
+      status.textContent = msg;
     }
 
-    if (noEndpoint) noEndpoint.hidden = true;
-    if (withEndpoint) withEndpoint.hidden = false;
-    if (form) form.hidden = false;
-    if (!form || !status || !submit) return;
-
-    function showStatus(type, message) {
-      status.className = "form-status is-visible " + type;
-      status.textContent = message;
-    }
-
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      status.className = "form-status";
-      status.textContent = "";
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      show("", "");
       if (!form.reportValidity()) return;
-
-      var data = new FormData(form);
       submit.disabled = true;
       fetch(endpoint, {
         method: (site.contact && site.contact.formMethod) || "POST",
-        body: data,
+        body: new FormData(form),
         headers: { Accept: "application/json" }
       })
         .then(function (res) {
-          if (!res.ok) throw new Error("Request failed");
-          showStatus("success", "Thank you — your interest has been sent. Ricard will be in touch.");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          show("success", "Thank you, your message is on its way to Ricard.");
           form.reset();
         })
         .catch(function () {
-          showStatus(
-            "error",
-            "Something went wrong sending the form. Please message Ricard on Instagram instead."
-          );
+          show("error", "Sorry, your message couldn't be sent just now. Please try again, or message Ricard on Instagram.");
         })
-        .finally(function () {
-          submit.disabled = false;
-        });
+        .then(function () { submit.disabled = false; });
     });
   }
 
   applyBindings();
+  applyMeta();
   buildGallery();
+  optionalPhoto("host-photo", site.images && site.images.host);
+  optionalPhoto("chef-photo", site.images && site.images.chef);
   setupNav();
-  setupContact();
+  setupForm();
 })();

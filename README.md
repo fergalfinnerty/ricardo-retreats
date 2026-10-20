@@ -1,75 +1,38 @@
-# Ricardo Retreats
+# Ricard Retreats (website preview)
 
-Standalone static website for **Ricardo Retreats** (host: **Ricard Chillon**).  
-Plain HTML/CSS/JS — no build step.
+Static site for Ricard Chillon's Lanzarote yoga retreat, 5–10 November 2026.
+Plain HTML/CSS/JS, no build step. Hosted on GitHub Pages from the `main` branch root
+(the repository and URL keep the older name `ricardo-retreats` so existing links keep working).
 
-**Live review draft (noindex):** https://fergalfinnerty.github.io/ricardo-retreats/
+## Editing content
+1. Edit `site-config.js` (brand name, host name/title/bio, RR badge labels, playful line,
+   eyebrow, dates, facts, arrival/rooms/payment copy, Instagram and chef links, hero and gallery
+   images, optional host/chef photos, page title, description, share tags, footer, colours,
+   form endpoint). It must stay valid JSON after `window.SITE =` (whole-line `//` comments are fine).
+2. Run `python3 tools/sync-meta.py` (no dependencies). It copies the config into the static
+   `index.html`: `<title>`, description, Open Graph/Twitter tags, every `data-bind` text,
+   bound links/labels/images, and the villa gallery. `js/main.js` also applies the config in the
+   browser, but link previews and crawlers only read the static HTML, so run the script after edits.
+3. Commit and push to `main`; Pages redeploys automatically.
 
-## Edit content
+Not driven by the config: the section copy written directly in `index.html` (experience
+moments, villa paragraph, food text, included list, FAQ answers), the RR monogram drawing
+(SVG `<symbol id="rr-pair">` in `index.html`, also in `favicon.svg`), and the share image
+`assets/images/og-cover.jpg`, which is rendered from `tools/og-cover.html` with headless Chrome.
 
-Almost everything editable lives in **`site-config.js`**:
+## Images
+Real stills from the June 2026 villa media (WhatsApp photo/videos, kept out of git in
+`assets/raw/`). Hero: a sea-view room from VID-20260604-WA0013 at native resolution (464×620).
+Host and chef photos are optional (`images.host` / `images.chef`); while `null`, those sections
+stay text-led and no empty box is shown.
 
-- Brand name, monogram text, playful line (“Truly the RR of retreats.”)
-- Dates, price, availability/payment wording
-- Instagram URLs
-- Colours
-- Form endpoint (`contact.formEndpoint` — leave empty until you have Formspree or similar)
-- Gallery image paths and captions
+## Enquiry form
+Hidden while `contact.formEndpoint` is empty; visitors see the Instagram button only. When a
+real endpoint (e.g. Formspree) is added, the form appears and shows a thank-you only after a
+successful (2xx) response, otherwise a friendly error pointing to Instagram.
 
-Colours are also defaults in `css/styles.css` (`:root` variables).
-
-## Replace images
-
-Genuine Lanzarote villa media is under `assets/images/` (webp + jpg).
-
-| File | Caption (honest) |
-|------|------------------|
-| `yoga-studio.*` | Yoga space: mats in baskets, coastal view through glass |
-| `villa-entrance.*` | Entrance through wooden doors into communal hallway |
-| `communal-lounge.*` | Lounge with seating, plants, woven lights |
-| `living-sea-view.*` | Living/dining opening to terrace and sea |
-| `guest-bedroom.*` | Guest bedroom |
-| `room-sea-view.*` | Quiet room with balcony over the sea |
-
-**Placeholders still needed:** host portrait (Ricard), chef/meals photo.  
-Drop files into `assets/images/`, then update the HTML placeholders or `site-config.js`.  
-Do **not** scrape Instagram images. Exclude Crete / June20 photos from the Lanzarote gallery.
-
-## Contact form
-
-1. Create a Formspree (or similar) form.
-2. Set `contact.formEndpoint` in `site-config.js` to the POST URL.
-3. While `formEndpoint` is empty, the form fields stay hidden and the page shows a direct **Message Ricard on Instagram** button only (no submit that discards fields).
-4. When an endpoint is set, the form POSTs and shows success only on a real 2xx response.
-
-## Deploy
-
-### GitHub Pages (current)
-
-This site is intended for `fergalfinnerty/ricardo-retreats` with Pages from the `main` branch root.
-
-```bash
-# from this folder, after edits:
-git add -A && git commit -m "Update site" && git push
-```
-
-### Netlify Drop / Cloudflare Pages
-
-Drag the folder (or connect the repo) as a static site. Publish directory = site root. Free tiers are enough.
-
-### Custom domain later
-
-In GitHub Pages (or Netlify/Cloudflare), add the domain and point DNS (A/ALIAS/CNAME) as the host instructs. Update `siteUrl` and OG tags in `index.html` / `site-config.js`.
+## Draft status
+`<meta name="robots" content="noindex, nofollow">` stays in `index.html` until the site is approved.
 
 ## Local preview
-
-```bash
-python3 -m http.server 8765
-# open http://127.0.0.1:8765/
-```
-
-## Brand notes
-
-- Working brand name: **Ricardo Retreats** (editable).
-- Host’s name: **Ricard Chillon** (not “Ricardo Chilean”).
-- Playful RR line is Fergal’s wordplay — original monogram only; no automotive logo or endorsement.
+`python3 -m http.server 8765` then open http://localhost:8765/
