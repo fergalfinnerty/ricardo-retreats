@@ -138,6 +138,8 @@ p { margin: 0 0 1.1em; }
 .button-primary:hover { background: var(--charcoal); color: var(--ivory); }
 .button-light { background: var(--ivory); color: var(--charcoal); }
 .button-light:hover { background: #fff; color: var(--charcoal); }
+.button-outline-light { background: transparent; color: var(--ivory); border-color: rgba(246, 242, 233, 0.75); }
+.button-outline-light:hover { background: rgba(246, 242, 233, 0.12); color: var(--ivory); }
 .text-link { font-weight: 600; color: var(--sea); }
 
 /* Header */
@@ -259,34 +261,17 @@ figcaption { font-size: 0.875rem; color: var(--muted); margin-top: 0.7rem; paddi
 }
 
 /* Villa */
-.villa-intro { display: grid; gap: 2.5rem; align-items: end; margin-bottom: clamp(3rem, 6vw, 5rem); }
-.villa-feature { margin: 0; max-width: 440px; }
-.villa-feature img { width: 100%; border-radius: var(--radius); aspect-ratio: 464 / 600; object-fit: cover; }
-.villa-text { max-width: 34rem; }
+.villa-intro { margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+.villa-text { max-width: 40rem; }
 .villa-text h2 { margin-bottom: 1.5rem; }
 .villa-lede { font-family: var(--serif); font-size: 1.45rem; line-height: 1.4; color: var(--charcoal); }
-@media (min-width: 900px) {
-  .villa-intro { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(3rem, 6vw, 6rem); }
-  .villa-text { padding-bottom: 2.5rem; }
-}
-.gallery { display: grid; gap: 2.25rem 1.5rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Aligned gallery: equal columns, equal gaps, one aspect ratio, captions in the same place.
+   Capped at 960px so the 464px-wide source frames are never shown much larger than native. */
+.gallery { display: grid; grid-template-columns: 1fr; gap: 2rem 1.5rem; max-width: 960px; }
 .gallery figure { margin: 0; }
-.gallery img { width: 100%; border-radius: var(--radius); object-fit: cover; }
-.gallery .g-tall img { aspect-ratio: 3 / 4; }
-.gallery .g-wide { grid-column: 1 / -1; }
-.gallery .g-wide img { aspect-ratio: 3 / 2; object-position: 50% 0%; }
-@media (max-width: 559px) {
-  .gallery { gap: 1.75rem 1rem; }
-  .gallery figcaption { font-size: 0.8125rem; }
-}
-@media (min-width: 900px) {
-  .gallery { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3rem 1.75rem; align-items: start; }
-  .gallery figure:nth-child(1) { grid-column: 1 / span 4; }
-  .gallery figure:nth-child(2) { grid-column: 5 / span 4; margin-top: 4rem; }
-  .gallery figure:nth-child(3) { grid-column: 9 / span 4; }
-  .gallery figure:nth-child(4) { grid-column: 1 / span 7; }
-  .gallery figure:nth-child(5) { grid-column: 9 / span 4; margin-top: 3rem; }
-  .gallery figure:nth-child(n+6) { grid-column: span 4; }
+.gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 50%; border-radius: var(--radius); }
+@media (min-width: 640px) {
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.25rem 1.75rem; }
 }
 
 /* Food */
@@ -321,7 +306,9 @@ figcaption { font-size: 0.875rem; color: var(--muted); margin-top: 0.7rem; paddi
 .contact-inner { max-width: 46rem; text-align: center; }
 .contact-inner h2 { margin-bottom: 1.4rem; }
 .contact-intro { font-family: var(--serif); font-size: clamp(1.4rem, 2.4vw, 1.75rem); line-height: 1.4; color: #f1ece1; margin: 0 auto 2.25rem; max-width: 32ch; }
-.contact-actions { margin: 0; }
+.contact-actions { margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9rem 1rem; }
+.contact-email { margin: 1.25rem 0 0; color: #f1ece1; font-size: 1rem; }
+.contact-email a { font-weight: 600; overflow-wrap: anywhere; }
 .interest-form { margin: 3rem auto 0; max-width: 32rem; text-align: left; display: grid; gap: 1.1rem; }
 .field label { display: block; font-weight: 600; margin-bottom: 0.35rem; }
 .optional { font-weight: 400; opacity: 0.85; }
@@ -337,9 +324,13 @@ figcaption { font-size: 0.875rem; color: var(--muted); margin-top: 0.7rem; paddi
 .form-status.success { color: #dfeee5; }
 .form-status.error { color: #f3d3c6; }
 
-/* Teaser */
-.teaser { padding: 1.6rem 0; border-bottom: 1px solid var(--rule); text-align: center; }
-.teaser p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--muted); }
+/* Next retreat band */
+.teaser { background: var(--sand); --rr-knock: var(--sand); padding: clamp(3rem, 6vw, 4.5rem) 0; text-align: center; }
+.teaser-inner { max-width: 44rem; border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); padding-top: 2.25rem; padding-bottom: 2.25rem; }
+.teaser .eyebrow { margin-bottom: 0.8rem; }
+.teaser-title { font-size: clamp(1.9rem, 3.6vw, 2.6rem); margin-bottom: 1rem; }
+.teaser-body { margin: 0 auto; max-width: 36rem; font-family: var(--serif); font-size: clamp(1.2rem, 2vw, 1.4rem); line-height: 1.5; color: var(--charcoal); }
+.teaser-body a { color: var(--sea); font-weight: 600; }
 
 /* Footer */
 .site-footer { padding: 3.5rem 0 3rem; }

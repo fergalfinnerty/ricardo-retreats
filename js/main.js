@@ -106,10 +106,12 @@
     return pic;
   }
 
-  function figure(item, className) {
+  function figure(item) {
     var fig = document.createElement("figure");
-    if (className) fig.className = className;
-    fig.appendChild(picture(item));
+    fig.className = "g-item";
+    var pic = picture(item);
+    if (item.position) pic.querySelector("img").style.objectPosition = item.position;
+    fig.appendChild(pic);
     if (item.caption) {
       var cap = document.createElement("figcaption");
       cap.textContent = item.caption;
@@ -120,21 +122,24 @@
 
   function buildGallery() {
     var list = site.images && site.images.gallery;
-    if (!list || !list.length) return;
-    var feature = document.getElementById("villa-feature");
     var gallery = document.getElementById("gallery");
-    var rest = list.slice();
-    if (feature && rest[0] && rest[0].layout === "feature") {
-      var f = figure(rest.shift(), "villa-feature");
-      f.id = "villa-feature";
-      feature.parentNode.replaceChild(f, feature);
-    }
-    if (gallery) {
-      gallery.innerHTML = "";
-      rest.forEach(function (item) {
-        gallery.appendChild(figure(item, item.layout === "wide" ? "g-wide" : "g-tall"));
-      });
-    }
+    if (!list || !list.length || !gallery) return;
+    gallery.innerHTML = "";
+    list.forEach(function (item) { gallery.appendChild(figure(item)); });
+  }
+
+  /* Optional email: contact.email + contact.emailSubject */
+  function mailtoHref() {
+    var c = site.contact || {};
+    var email = (c.email || "").trim();
+    if (!email) return "";
+    return "mailto:" + email + (c.emailSubject ? "?subject=" + encodeURIComponent(c.emailSubject) : "");
+  }
+
+  function setupEmail() {
+    var href = mailtoHref();
+    each("[data-email-only]", function (el) { el.hidden = !href; });
+    if (href) each("[data-email-link]", function (el) { el.setAttribute("href", href); });
   }
 
   function optionalPhoto(id, item) {
@@ -211,6 +216,7 @@
   buildGallery();
   optionalPhoto("host-photo", site.images && site.images.host);
   optionalPhoto("chef-photo", site.images && site.images.chef);
+  setupEmail();
   setupNav();
   setupForm();
 })();

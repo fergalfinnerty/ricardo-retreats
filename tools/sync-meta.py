@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Copy values from site-config.js into the static index.html.
 
-Why: js/main.js applies site-config.js in the browser, but link previews (WhatsApp,
+Why: js/main.js applies site-config.js in the browser, but link previews (messaging apps,
 iMessage, social sites), crawlers and visitors without JavaScript only read the static
 HTML. Run this after editing site-config.js so both stay identical:
 
@@ -11,7 +11,9 @@ It rewrites:
   * the <title>, description, Open Graph / Twitter tags and canonical link (META block)
   * the text of every element with data-bind="path" (simple text elements only)
   * href / aria-label / src / srcset / alt attributes marked data-bind-href etc.
-  * the static villa feature image and gallery (FEATURE / GALLERY blocks)
+  * the static villa gallery (GALLERY block)
+  * the optional email button/text: shown with a mailto: link when contact.email is set,
+    hidden when it is empty
 No third-party packages needed.
 """
 import html
@@ -91,9 +93,21 @@ def picture(item, lazy=True):
             f'alt="{esc(item.get("alt", ""))}"></picture>')
 
 
-def figure(item, cls, extra=""):
+def figure(item):
+    pos = f' style="object-position: {esc(item["position"])}"' if item.get("position") else ""
+    pic = picture(item).replace("<img ", f"<img{pos} ", 1) if pos else picture(item)
     cap = f'\n            <figcaption>{esc(item["caption"])}</figcaption>' if item.get("caption") else ""
-    return (f'          <figure class="{cls}"{extra}>\n            {picture(item)}{cap}\n          </figure>')
+    return f'          <figure class="g-item">\n            {pic}{cap}\n          </figure>'
+
+
+def mailto(cfg):
+    from urllib.parse import quote
+    c = cfg.get("contact", {})
+    email = (c.get("email") or "").strip()
+    if not email:
+        return ""
+    subj = c.get("emailSubject") or ""
+    return "mailto:" + email + ("?subject=" + quote(subj) if subj else "")
 
 
 def replace_block(s, name, content):
@@ -110,10 +124,16 @@ def main():
     s = replace_block(s, "META", meta_block(cfg))
 
     gallery = list(get(cfg, "images.gallery") or [])
-    if gallery and gallery[0].get("layout") == "feature":
-        s = replace_block(s, "FEATURE", figure(gallery.pop(0), "villa-feature", ' id="villa-feature"'))
-    s = replace_block(s, "GALLERY", "\n".join(
-        figure(i, "g-wide" if i.get("layout") == "wide" else "g-tall") for i in gallery))
+    s = replace_block(s, "GALLERY", "\n".join(figure(i) for i in gallery))
+
+    # Optional email: show/hide [data-email-only] and point [data-email-link] at the mailto URL
+    href = mailto(cfg)
+    def email_only(mo):
+        tag = re.sub(r"\s+hidden(?=[\s>])", "", mo.group(0))
+        return tag if href else tag[:-1] + " hidden>"
+    s = re.sub(r"<[^<>]*\bdata-email-only\b[^<>]*>", email_only, s)
+    if href:
+        s = re.sub(r"(<[^<>]*\bdata-email-link\b[^<>]*\shref=\")[^\"]*", lambda mo: mo.group(1) + esc(href), s)
 
     missing = []
 

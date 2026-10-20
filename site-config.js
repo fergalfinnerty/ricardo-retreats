@@ -62,6 +62,10 @@ window.SITE = {
     "ctaLabel": "Message Ricard on Instagram",
     "instagramUrl": "https://www.instagram.com/ricardchillonpt/",
     "instagramHandle": "@ricardchillonpt",
+    // Email shown as an "Email Ricard" button with the address written out. Leave "" to hide it.
+    "email": "ricardchillon@gmail.com",
+    "emailSubject": "Lanzarote retreat enquiry",
+    "emailLabel": "Email Ricard",
     // Leave formEndpoint empty until a real form service (e.g. a Formspree URL) is set up.
     // While it is empty, the enquiry form stays hidden and only the Instagram button shows.
     "formEndpoint": "",
@@ -73,7 +77,14 @@ window.SITE = {
     "instagramHandle": "@maurosiepechef"
   },
 
-  "futureTeaser": "More retreats ahead — Crete, April 2027",
+  // Small "next retreat" band near the end of the page. No dates or prices on purpose.
+  "futureTeaser": {
+    "heading": "Crete on the horizon.",
+    "body": "Greek sunshine, mindful movement and room to exhale.",
+    "linkText": "Follow Ricard on Instagram",
+    "linkAfter": " in early 2027 for a first glimpse of the next adventure.",
+    "linkUrl": "https://www.instagram.com/ricardchillonpt/"
+  },
 
   "footer": {
     "line": "Hosted by Ricard Chillon · Lanzarote",
@@ -89,55 +100,40 @@ window.SITE = {
       "alt": "A bright room at the villa, with two chairs by sheer curtains and glass doors opening onto a view of the sea",
       "caption": "Sea view from one of the villa's rooms"
     },
-    // The first gallery image sits beside the villa text; "layout" can be "feature", "tall" or "wide".
+    // Villa gallery: shown as an aligned 2x2 grid (one column on mobile), every image cropped to 4:3.
+    // "position" is the optional CSS object-position focal point, e.g. "50% 40%".
     "gallery": [
       {
-        "webp": "assets/images/yoga-sea-view.webp",
-        "jpg": "assets/images/yoga-sea-view.jpg",
-        "width": 464, "height": 600,
-        "alt": "The yoga studio: a single mat on a pale wooden floor in front of wide glass doors, with the sea beyond",
+        "webp": "assets/images/villa-studio-sea.webp",
+        "jpg": "assets/images/villa-studio-sea.jpg",
+        "width": 464, "height": 348,
+        "alt": "The yoga studio: a mat on a pale wooden floor in front of wide glass doors, with the sea beyond",
         "caption": "The yoga studio, looking out to the sea",
-        "layout": "feature"
+        "position": "50% 50%"
       },
       {
-        "webp": "assets/images/living-sea-view.webp",
-        "jpg": "assets/images/living-sea-view.jpg",
-        "width": 464, "height": 832,
-        "alt": "Living and dining area with a wooden table and chairs, opening onto a terrace with the sea beyond",
-        "caption": "Living and dining space, open to the sea",
-        "layout": "tall"
+        "webp": "assets/images/villa-living-sea.webp",
+        "jpg": "assets/images/villa-living-sea.jpg",
+        "width": 464, "height": 348,
+        "alt": "Dining area with a long table and chairs in front of glass doors that open towards the sea",
+        "caption": "Dining and living space, with the sea beyond",
+        "position": "50% 50%"
       },
       {
-        "webp": "assets/images/communal-lounge.webp",
-        "jpg": "assets/images/communal-lounge.jpg",
-        "width": 464, "height": 832,
-        "alt": "Communal lounge with soft seating, hanging plants and woven pendant lights",
+        "webp": "assets/images/villa-lounge.webp",
+        "jpg": "assets/images/villa-lounge.jpg",
+        "width": 464, "height": 348,
+        "alt": "The communal lounge, with deep sofas and striped cushions beneath hanging plants",
         "caption": "The communal lounge",
-        "layout": "tall"
+        "position": "50% 50%"
       },
       {
-        "webp": "assets/images/villa-entrance.webp",
-        "jpg": "assets/images/villa-entrance.jpg",
-        "width": 464, "height": 832,
-        "alt": "Villa entrance through open wooden doors into a bright hallway",
-        "caption": "Arriving at the villa",
-        "layout": "tall"
-      },
-      {
-        "webp": "assets/images/yoga-studio.webp",
-        "jpg": "assets/images/yoga-studio.jpg",
-        "width": 1200, "height": 1600,
-        "alt": "Woven baskets of rolled yoga mats in the studio, beside a glass door looking out towards the coast",
-        "caption": "Mats ready in the studio",
-        "layout": "wide"
-      },
-      {
-        "webp": "assets/images/guest-bedroom.webp",
-        "jpg": "assets/images/guest-bedroom.jpg",
-        "width": 576, "height": 1024,
-        "alt": "A bedroom with a wooden headboard, white linen and a built-in wardrobe",
+        "webp": "assets/images/villa-bedroom.webp",
+        "jpg": "assets/images/villa-bedroom.jpg",
+        "width": 576, "height": 432,
+        "alt": "A bedroom with white linen, a bedside lamp, a wooden headboard and a built-in wardrobe",
         "caption": "One of the bedrooms",
-        "layout": "tall"
+        "position": "50% 50%"
       }
     ],
     // Optional: add a real, approved photo later, e.g. {"jpg": "assets/images/ricard.jpg", "alt": "Ricard Chillon"}.

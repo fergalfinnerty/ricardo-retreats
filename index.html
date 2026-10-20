@@ -161,12 +161,6 @@
     <section class="section" id="villa" aria-labelledby="villa-title">
       <div class="container">
         <div class="villa-intro">
-          <!-- FEATURE:START -->
-          <figure class="villa-feature" id="villa-feature">
-            <picture><source type="image/webp" srcset="assets/images/yoga-sea-view.webp"><img src="assets/images/yoga-sea-view.jpg" width="464" height="600" loading="lazy" alt="The yoga studio: a single mat on a pale wooden floor in front of wide glass doors, with the sea beyond"></picture>
-            <figcaption>The yoga studio, looking out to the sea</figcaption>
-          </figure>
-          <!-- FEATURE:END -->
           <div class="villa-text">
             <p class="eyebrow">The villa</p>
             <h2 id="villa-title">A villa by the sea</h2>
@@ -177,24 +171,20 @@
         </div>
         <div class="gallery" id="gallery">
           <!-- GALLERY:START -->
-          <figure class="g-tall">
-            <picture><source type="image/webp" srcset="assets/images/living-sea-view.webp"><img src="assets/images/living-sea-view.jpg" width="464" height="832" loading="lazy" alt="Living and dining area with a wooden table and chairs, opening onto a terrace with the sea beyond"></picture>
-            <figcaption>Living and dining space, open to the sea</figcaption>
+          <figure class="g-item">
+            <picture><source type="image/webp" srcset="assets/images/villa-studio-sea.webp"><img style="object-position: 50% 50%" src="assets/images/villa-studio-sea.jpg" width="464" height="348" loading="lazy" alt="The yoga studio: a mat on a pale wooden floor in front of wide glass doors, with the sea beyond"></picture>
+            <figcaption>The yoga studio, looking out to the sea</figcaption>
           </figure>
-          <figure class="g-tall">
-            <picture><source type="image/webp" srcset="assets/images/communal-lounge.webp"><img src="assets/images/communal-lounge.jpg" width="464" height="832" loading="lazy" alt="Communal lounge with soft seating, hanging plants and woven pendant lights"></picture>
+          <figure class="g-item">
+            <picture><source type="image/webp" srcset="assets/images/villa-living-sea.webp"><img style="object-position: 50% 50%" src="assets/images/villa-living-sea.jpg" width="464" height="348" loading="lazy" alt="Dining area with a long table and chairs in front of glass doors that open towards the sea"></picture>
+            <figcaption>Dining and living space, with the sea beyond</figcaption>
+          </figure>
+          <figure class="g-item">
+            <picture><source type="image/webp" srcset="assets/images/villa-lounge.webp"><img style="object-position: 50% 50%" src="assets/images/villa-lounge.jpg" width="464" height="348" loading="lazy" alt="The communal lounge, with deep sofas and striped cushions beneath hanging plants"></picture>
             <figcaption>The communal lounge</figcaption>
           </figure>
-          <figure class="g-tall">
-            <picture><source type="image/webp" srcset="assets/images/villa-entrance.webp"><img src="assets/images/villa-entrance.jpg" width="464" height="832" loading="lazy" alt="Villa entrance through open wooden doors into a bright hallway"></picture>
-            <figcaption>Arriving at the villa</figcaption>
-          </figure>
-          <figure class="g-wide">
-            <picture><source type="image/webp" srcset="assets/images/yoga-studio.webp"><img src="assets/images/yoga-studio.jpg" width="1200" height="1600" loading="lazy" alt="Woven baskets of rolled yoga mats in the studio, beside a glass door looking out towards the coast"></picture>
-            <figcaption>Mats ready in the studio</figcaption>
-          </figure>
-          <figure class="g-tall">
-            <picture><source type="image/webp" srcset="assets/images/guest-bedroom.webp"><img src="assets/images/guest-bedroom.jpg" width="576" height="1024" loading="lazy" alt="A bedroom with a wooden headboard, white linen and a built-in wardrobe"></picture>
+          <figure class="g-item">
+            <picture><source type="image/webp" srcset="assets/images/villa-bedroom.webp"><img style="object-position: 50% 50%" src="assets/images/villa-bedroom.jpg" width="576" height="432" loading="lazy" alt="A bedroom with white linen, a bedside lamp, a wooden headboard and a built-in wardrobe"></picture>
             <figcaption>One of the bedrooms</figcaption>
           </figure>
           <!-- GALLERY:END -->
@@ -255,7 +245,7 @@
           </details>
           <details>
             <summary>How do I ask about joining?</summary>
-            <p>Message Ricard on Instagram at <a href="https://www.instagram.com/ricardchillonpt/" data-bind-href="contact.instagramUrl" target="_blank" rel="noopener noreferrer" data-bind="contact.instagramHandle">@ricardchillonpt</a> to ask about availability, rooms, payment or anything else.</p>
+            <p>Message Ricard on Instagram at <a href="https://www.instagram.com/ricardchillonpt/" data-bind-href="contact.instagramUrl" target="_blank" rel="noopener noreferrer" data-bind="contact.instagramHandle">@ricardchillonpt</a><span id="faq-email" data-email-only> or email <a data-email-link href="mailto:ricardchillon@gmail.com?subject=Lanzarote%20retreat%20enquiry" data-bind="contact.email">ricardchillon@gmail.com</a></span> to ask about availability, rooms, payment or anything else.</p>
           </details>
         </div>
       </div>
@@ -269,7 +259,9 @@
         <p class="contact-intro" data-bind="contact.intro">Thinking of joining us? Message Ricard to ask about availability, rooms or anything you'd like to know.</p>
         <p class="contact-actions">
           <a class="button button-light" id="instagram-link" href="https://www.instagram.com/ricardchillonpt/" data-bind-href="contact.instagramUrl" target="_blank" rel="noopener noreferrer"><span data-bind="contact.ctaLabel">Message Ricard on Instagram</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+          <a class="button button-outline-light" id="email-link" data-email-only data-email-link href="mailto:ricardchillon@gmail.com?subject=Lanzarote%20retreat%20enquiry"><span data-bind="contact.emailLabel">Email Ricard</span></a>
         </p>
+        <p class="contact-email" id="contact-email" data-email-only>or write to <a data-email-link href="mailto:ricardchillon@gmail.com?subject=Lanzarote%20retreat%20enquiry" data-bind="contact.email">ricardchillon@gmail.com</a></p>
 
         <!-- Enquiry form: stays hidden until contact.formEndpoint is set in site-config.js -->
         <form class="interest-form" id="interest-form" hidden novalidate>
@@ -295,10 +287,12 @@
       </div>
     </section>
 
-    <!-- TEASER -->
-    <aside class="teaser" aria-label="Future retreats">
-      <div class="container">
-        <p data-bind="futureTeaser">More retreats ahead — Crete, April 2027</p>
+    <!-- NEXT RETREAT -->
+    <aside class="teaser" aria-labelledby="teaser-title">
+      <div class="container teaser-inner">
+        <p class="eyebrow">Next retreat</p>
+        <h2 class="teaser-title" id="teaser-title" data-bind="futureTeaser.heading">Crete on the horizon.</h2>
+        <p class="teaser-body"><span data-bind="futureTeaser.body">Greek sunshine, mindful movement and room to exhale.</span> <a href="https://www.instagram.com/ricardchillonpt/" data-bind-href="futureTeaser.linkUrl" target="_blank" rel="noopener noreferrer" data-bind="futureTeaser.linkText">Follow Ricard on Instagram</a><span data-bind="futureTeaser.linkAfter"> in early 2027 for a first glimpse of the next adventure.</span></p>
       </div>
     </aside>
   </main>
