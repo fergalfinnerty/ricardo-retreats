@@ -4,6 +4,15 @@
   "use strict";
 
   var site = window.SITE || {};
+  var pageVersion = document.documentElement.getAttribute("data-asset-version") || "";
+  // Only let the config drive images if it is the same version as this HTML.
+  // A stale cached config can then never put old photos back.
+  var configFresh = !!site.assetVersion && site.assetVersion === pageVersion;
+
+  function v(url) {
+    if (!url || /^(https?:|data:|mailto:)/.test(url) || !site.assetVersion) return url;
+    return url.replace(/[?#].*$/, "") + "?v=" + encodeURIComponent(site.assetVersion);
+  }
 
   function get(path) {
     return path.split(".").reduce(function (acc, key) {
@@ -29,14 +38,16 @@
       var v = get(el.getAttribute("data-bind-aria"));
       if (v) el.setAttribute("aria-label", v);
     });
-    each("[data-bind-src]", function (el) {
-      var v = get(el.getAttribute("data-bind-src"));
-      if (v) el.setAttribute("src", v);
-    });
-    each("[data-bind-srcset]", function (el) {
-      var v = get(el.getAttribute("data-bind-srcset"));
-      if (v) el.setAttribute("srcset", v);
-    });
+    if (configFresh) {
+      each("[data-bind-src]", function (el) {
+        var val = get(el.getAttribute("data-bind-src"));
+        if (val) el.setAttribute("src", v(val));
+      });
+      each("[data-bind-srcset]", function (el) {
+        var val = get(el.getAttribute("data-bind-srcset"));
+        if (val) el.setAttribute("srcset", v(val));
+      });
+    }
     each("[data-bind-alt]", function (el) {
       var v = get(el.getAttribute("data-bind-alt"));
       if (v != null) el.setAttribute("alt", v);
@@ -92,11 +103,11 @@
     if (item.webp) {
       var s = document.createElement("source");
       s.type = "image/webp";
-      s.srcset = item.webp;
+      s.srcset = v(item.webp);
       pic.appendChild(s);
     }
     var img = document.createElement("img");
-    img.src = item.jpg || item.src;
+    img.src = v(item.jpg || item.src);
     img.alt = item.alt || "";
     if (item.width) img.width = item.width;
     if (item.height) img.height = item.height;
@@ -123,7 +134,8 @@
   function buildGallery() {
     var list = site.images && site.images.gallery;
     var gallery = document.getElementById("gallery");
-    if (!list || !list.length || !gallery) return;
+    // The static gallery in index.html is the baseline; only rebuild from a matching config.
+    if (!configFresh || !list || !list.length || !gallery) return;
     gallery.innerHTML = "";
     list.forEach(function (item) { gallery.appendChild(figure(item)); });
   }
@@ -214,8 +226,10 @@
   applyBindings();
   applyMeta();
   buildGallery();
-  optionalPhoto("host-photo", site.images && site.images.host);
-  optionalPhoto("chef-photo", site.images && site.images.chef);
+  if (configFresh) {
+    optionalPhoto("host-photo", site.images && site.images.host);
+    optionalPhoto("chef-photo", site.images && site.images.chef);
+  }
   setupEmail();
   setupNav();
   setupForm();

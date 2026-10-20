@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-asset-version="202610200858">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,10 +24,10 @@
   <meta name="twitter:image" content="https://fergalfinnerty.github.io/ricardo-retreats/assets/images/og-cover.jpg">
   <!-- META:END -->
   <meta name="theme-color" content="#345a48">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=202610200858" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="site-config.js"></script>
+  <link rel="stylesheet" href="css/styles.css?v=202610200858">
+  <script src="site-config.js?v=202610200858"></script>
 </head>
 <body id="top">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -83,8 +83,8 @@
         </div>
         <figure class="hero-figure">
           <picture>
-            <source type="image/webp" srcset="assets/images/hero-room-sea.webp" data-bind-srcset="images.hero.webp">
-            <img src="assets/images/hero-room-sea.jpg" data-bind-src="images.hero.jpg" data-bind-alt="images.hero.alt" width="464" height="620" alt="A bright room at the villa, with two chairs by sheer curtains and glass doors opening onto a view of the sea" fetchpriority="high">
+            <source type="image/webp" srcset="assets/images/hero-room-sea.webp?v=202610200858" data-bind-srcset="images.hero.webp">
+            <img src="assets/images/hero-room-sea.jpg?v=202610200858" data-bind-src="images.hero.jpg" data-bind-alt="images.hero.alt" width="464" height="620" alt="A bright room at the villa, with two chairs by sheer curtains and glass doors opening onto a view of the sea" fetchpriority="high">
           </picture>
           <figcaption data-bind="images.hero.caption">Sea view from one of the villa's rooms</figcaption>
         </figure>
@@ -172,19 +172,19 @@
         <div class="gallery" id="gallery">
           <!-- GALLERY:START -->
           <figure class="g-item">
-            <picture><source type="image/webp" srcset="assets/images/villa-studio-sea.webp"><img style="object-position: 50% 50%" src="assets/images/villa-studio-sea.jpg" width="464" height="348" loading="lazy" alt="The yoga studio: a mat on a pale wooden floor in front of wide glass doors, with the sea beyond"></picture>
+            <picture><source type="image/webp" srcset="assets/images/villa-studio-sea.webp?v=202610200858"><img style="object-position: 50% 50%" src="assets/images/villa-studio-sea.jpg?v=202610200858" width="464" height="348" loading="lazy" alt="The yoga studio: a mat on a pale wooden floor in front of wide glass doors, with the sea beyond"></picture>
             <figcaption>The yoga studio, looking out to the sea</figcaption>
           </figure>
           <figure class="g-item">
-            <picture><source type="image/webp" srcset="assets/images/villa-living-sea.webp"><img style="object-position: 50% 50%" src="assets/images/villa-living-sea.jpg" width="464" height="348" loading="lazy" alt="Dining area with a long table and chairs in front of glass doors that open towards the sea"></picture>
+            <picture><source type="image/webp" srcset="assets/images/villa-living-sea.webp?v=202610200858"><img style="object-position: 50% 50%" src="assets/images/villa-living-sea.jpg?v=202610200858" width="464" height="348" loading="lazy" alt="Dining area with a long table and chairs in front of glass doors that open towards the sea"></picture>
             <figcaption>Dining and living space, with the sea beyond</figcaption>
           </figure>
           <figure class="g-item">
-            <picture><source type="image/webp" srcset="assets/images/villa-lounge.webp"><img style="object-position: 50% 50%" src="assets/images/villa-lounge.jpg" width="464" height="348" loading="lazy" alt="The communal lounge, with deep sofas and striped cushions beneath hanging plants"></picture>
+            <picture><source type="image/webp" srcset="assets/images/villa-lounge.webp?v=202610200858"><img style="object-position: 50% 50%" src="assets/images/villa-lounge.jpg?v=202610200858" width="464" height="348" loading="lazy" alt="The communal lounge, with deep sofas and striped cushions beneath hanging plants"></picture>
             <figcaption>The communal lounge</figcaption>
           </figure>
           <figure class="g-item">
-            <picture><source type="image/webp" srcset="assets/images/villa-bedroom.webp"><img style="object-position: 50% 50%" src="assets/images/villa-bedroom.jpg" width="576" height="432" loading="lazy" alt="A bedroom with white linen, a bedside lamp, a wooden headboard and a built-in wardrobe"></picture>
+            <picture><source type="image/webp" srcset="assets/images/villa-bedroom.webp?v=202610200858"><img style="object-position: 50% 50%" src="assets/images/villa-bedroom.jpg?v=202610200858" width="576" height="432" loading="lazy" alt="A bedroom with white linen, a bedside lamp, a wooden headboard and a built-in wardrobe"></picture>
             <figcaption>One of the bedrooms</figcaption>
           </figure>
           <!-- GALLERY:END -->
@@ -288,13 +288,17 @@
     </section>
 
     <!-- NEXT RETREAT -->
-    <aside class="teaser" aria-labelledby="teaser-title">
-      <div class="container teaser-inner">
-        <p class="eyebrow">Next retreat</p>
-        <h2 class="teaser-title" id="teaser-title" data-bind="futureTeaser.heading">Crete on the horizon.</h2>
-        <p class="teaser-body"><span data-bind="futureTeaser.body">Greek sunshine, mindful movement and room to exhale.</span> <a href="https://www.instagram.com/ricardchillonpt/" data-bind-href="futureTeaser.linkUrl" target="_blank" rel="noopener noreferrer" data-bind="futureTeaser.linkText">Follow Ricard on Instagram</a><span data-bind="futureTeaser.linkAfter"> in early 2027 for a first glimpse of the next adventure.</span></p>
+    <section class="section next-retreat" id="next-retreat" aria-labelledby="next-title">
+      <div class="container">
+        <div class="next-frame">
+          <p class="eyebrow" data-bind="futureTeaser.eyebrow">Next retreat</p>
+          <h2 id="next-title" data-bind="futureTeaser.heading">The Crete Adventure · 2027</h2>
+          <p class="next-lead" data-bind="futureTeaser.lead">A little Greek sunshine. A deeper breath. A new adventure.</p>
+          <p class="next-body" data-bind="futureTeaser.body">Leave the new-year rush behind and look towards Crete, with mindful movement and room to exhale. Follow Ricard on Instagram for a first glimpse in early 2027.</p>
+          <p class="next-actions"><a class="button button-primary" href="https://www.instagram.com/ricardchillonpt/" data-bind-href="futureTeaser.linkUrl" target="_blank" rel="noopener noreferrer"><span data-bind="futureTeaser.linkText">Follow the Crete adventure</span><span class="visually-hidden"> (opens Instagram in a new tab)</span></a></p>
+        </div>
       </div>
-    </aside>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -317,6 +321,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=202610200858"></script>
 </body>
 </html>

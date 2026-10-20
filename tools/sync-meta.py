@@ -5,9 +5,12 @@ Why: js/main.js applies site-config.js in the browser, but link previews (messag
 iMessage, social sites), crawlers and visitors without JavaScript only read the static
 HTML. Run this after editing site-config.js so both stay identical:
 
-    python3 tools/sync-meta.py
+    python3 tools/sync-meta.py --bump   (sets a new assetVersion first; use after any change)
+    python3 tools/sync-meta.py          (sync only, keeps the current assetVersion)
 
 It rewrites:
+  * the cache-busting ?v=<assetVersion> on styles, scripts, config, favicon and every image,
+    plus <html data-asset-version>, which main.js compares with the config before touching images
   * the <title>, description, Open Graph / Twitter tags and canonical link (META block)
   * the text of every element with data-bind="path" (simple text elements only)
   * href / aria-label / src / srcset / alt attributes marked data-bind-href etc.
@@ -25,6 +28,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG = ROOT / "site-config.js"
 INDEX = ROOT / "index.html"
+
+
+VERSION = ""
+
+
+def ver(url):
+    if not url or re.match(r"^(https?:|data:|mailto:)", url) or not VERSION:
+        return url
+    return re.sub(r"[?#].*$", "", url) + "?v=" + VERSION
+
+
+def bump():
+    import datetime
+    stamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+    text = CONFIG.read_text(encoding="utf-8")
+    text, n = re.subn(r'("assetVersion":\s*")[^"]*(")', lambda m: m.group(1) + stamp + m.group(2), text, count=1)
+    if n != 1:
+        sys.exit("assetVersion not found in site-config.js")
+    CONFIG.write_text(text, encoding="utf-8")
+    return stamp
 
 
 def load_config():
@@ -87,9 +110,9 @@ def picture(item, lazy=True):
     h = f' height="{item["height"]}"' if item.get("height") else ""
     src = ""
     if item.get("webp"):
-        src = f'<source type="image/webp" srcset="{esc(item["webp"])}">'
+        src = f'<source type="image/webp" srcset="{esc(ver(item["webp"]))}">'
     load = ' loading="lazy"' if lazy else ""
-    return (f'<picture>{src}<img src="{esc(item.get("jpg") or item.get("src"))}"{w}{h}{load} '
+    return (f'<picture>{src}<img src="{esc(ver(item.get("jpg") or item.get("src")))}"{w}{h}{load} '
             f'alt="{esc(item.get("alt", ""))}"></picture>')
 
 
@@ -118,8 +141,18 @@ def replace_block(s, name, content):
 
 
 def main():
+    global VERSION
+    if "--bump" in sys.argv[1:]:
+        print("assetVersion ->", bump())
     cfg = load_config()
+    VERSION = str(cfg.get("assetVersion") or "")
     s = INDEX.read_text(encoding="utf-8")
+
+    # cache-busting versions on local CSS/JS/config/favicon/image references
+    s = re.sub(r'(<html\b[^>]*\sdata-asset-version=")[^"]*"', lambda m: m.group(1) + esc(VERSION) + '"', s, count=1)
+    def vref(mo):
+        return mo.group(1) + esc(ver(mo.group(2))) + '"'
+    s = re.sub(r'(\s(?:href|src|srcset)=")((?!https?:|mailto:|#|data:)[^"]+\.(?:css|js|svg|jpg|jpeg|png|webp)(?:\?[^"]*)?)"', vref, s)
 
     s = replace_block(s, "META", meta_block(cfg))
 
@@ -158,6 +191,8 @@ def main():
             if not isinstance(val, str):
                 missing.append(mo.group(1))
                 return tag
+            if target in ("src", "srcset"):
+                val = ver(val)
             new = re.sub(r'\s%s="[^"]*"' % re.escape(target), f' {target}="{esc(val)}"', tag, count=1)
             if new == tag and f' {target}="' not in tag:
                 new = tag[:-1] + f' {target}="{esc(val)}">'

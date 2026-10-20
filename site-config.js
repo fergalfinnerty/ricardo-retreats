@@ -1,10 +1,12 @@
 // Ricard Retreats: the one file to edit for names, dates, prices, links, images and colours.
 // Format note: everything between "window.SITE =" and the final ";" must stay valid JSON
 // (double quotes, no trailing commas). Whole-line comments starting with // are fine.
-// After editing, run:  python3 tools/sync-meta.py  so the static HTML (seen by link previews,
+// After editing, run:  python3 tools/sync-meta.py --bump  so the static HTML (seen by link previews,
 // crawlers and visitors without JavaScript) matches this file. In the browser, js/main.js also
 // applies these values on page load.
 window.SITE = {
+  // Cache-busting version. Bump with:  python3 tools/sync-meta.py --bump
+  "assetVersion": "202610200858",
   "brandName": "Ricard Retreats",
   "hostName": "Ricard Chillon",
   "hostTitle": "Personal trainer and yoga teacher",
@@ -77,12 +79,13 @@ window.SITE = {
     "instagramHandle": "@maurosiepechef"
   },
 
-  // Small "next retreat" band near the end of the page. No dates or prices on purpose.
+  // "Next retreat" section near the end of the page. No dates or prices on purpose.
   "futureTeaser": {
-    "heading": "Crete on the horizon.",
-    "body": "Greek sunshine, mindful movement and room to exhale.",
-    "linkText": "Follow Ricard on Instagram",
-    "linkAfter": " in early 2027 for a first glimpse of the next adventure.",
+    "eyebrow": "Next retreat",
+    "heading": "The Crete Adventure\u00a0·\u00a02027",
+    "lead": "A little Greek sunshine. A deeper breath. A new adventure.",
+    "body": "Leave the new-year rush behind and look towards Crete, with mindful movement and room to exhale. Follow Ricard on Instagram for a first glimpse in early 2027.",
+    "linkText": "Follow the Crete adventure",
     "linkUrl": "https://www.instagram.com/ricardchillonpt/"
   },
 

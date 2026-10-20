@@ -9,7 +9,7 @@ Plain HTML/CSS/JS, no build step. Hosted on GitHub Pages from the `main` branch 
    eyebrow, dates, facts, arrival/rooms/payment copy, Instagram and chef links, contact email,
    hero and gallery images, optional host/chef photos, page title, description, share tags,
    site URL, footer, colours, form endpoint). It must stay valid JSON after `window.SITE =` (whole-line `//` comments are fine).
-2. Run `python3 tools/sync-meta.py` (no dependencies). It copies the config into the static
+2. Run `python3 tools/sync-meta.py --bump` (no dependencies). It copies the config into the static
    `index.html`: `<title>`, description, Open Graph/Twitter tags, every `data-bind` text,
    bound links/labels/images, the villa gallery, and the optional email button/text. `js/main.js` also applies the config in the
    browser, but link previews and crawlers only read the static HTML, so run the script after edits.
@@ -19,6 +19,14 @@ Not driven by the config: the section copy written directly in `index.html` (exp
 moments, villa paragraph, food text, included list, FAQ answers), the RR monogram drawing
 (SVG `<symbol id="rr-pair">` in `index.html`, also in `favicon.svg`), and the share image
 `assets/images/og-cover.jpg`, which is rendered from `tools/og-cover.html` with headless Chrome.
+
+## Cache busting (assetVersion)
+`site-config.js` has one `assetVersion`. `python3 tools/sync-meta.py --bump` sets it to the
+current date and time, then writes `?v=<assetVersion>` onto every local stylesheet, script,
+config, favicon and image reference in `index.html`, and sets `<html data-asset-version>`.
+`js/main.js` only lets the config change images (hero, gallery, optional host/chef photos) when
+the config's `assetVersion` matches the page. A stale cached config therefore can't put old
+photos back: the static gallery in `index.html` stays. Bump after every change you deploy.
 
 ## Images
 Real stills from the 4 June 2026 villa videos (kept out of git in `assets/raw/`), exported at
